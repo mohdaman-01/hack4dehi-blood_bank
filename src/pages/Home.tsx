@@ -1,94 +1,67 @@
-import { Users, Droplets, AlertCircle, TrendingUp, Activity, Heart } from "lucide-react";
+import { MapPin, Droplets, AlertTriangle, TrendingUp, Activity, Cloud } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
 
 interface Stats {
-  totalDonors: number;
-  availableUnits: number;
-  expiringUnits: number;
+  totalHotspots: number;
+  activeAlerts: number;
+  criticalZones: number;
 }
 
 const Home = () => {
   const [stats, setStats] = useState<Stats>({
-    totalDonors: 0,
-    availableUnits: 0,
-    expiringUnits: 0,
+    totalHotspots: 0,
+    activeAlerts: 0,
+    criticalZones: 0,
   });
-  const { user } = useAuth();
 
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080/api'}/dashboard/stats`, {
-          headers: {
-            'Authorization': `Bearer ${user?.token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080/api'}/dashboard/stats`);
 
         if (response.ok) {
           const apiStats = await response.json();
           setStats({
-            totalDonors: apiStats.totalDonors || 0,
-            availableUnits: apiStats.availableUnits || 0,
-            expiringUnits: apiStats.expiringUnits || 0,
+            totalHotspots: apiStats.totalHotspots || 0,
+            activeAlerts: apiStats.activeAlerts || 0,
+            criticalZones: apiStats.criticalZones || 0,
           });
-          return;
         }
       } catch (error) {
         console.error('Failed to load stats from API:', error);
-        setStats({
-          totalDonors: 0,
-          availableUnits: 0,
-          expiringUnits: 0,
-        });
       }
     };
 
-    if (user) {
-      loadStats();
-    }
-  }, [user]);
+    loadStats();
+  }, []);
 
-  const getStatCards = () => {
-    const baseStats = [
-      {
-        title: "Total Donors",
-        value: stats.totalDonors,
-        icon: Users,
-        color: "text-primary",
-        bgColor: "from-primary/20 to-primary/5",
-        borderColor: "border-primary/20",
-      },
-    ];
-
-    if (user?.role === 'ADMIN') {
-      return [
-        ...baseStats,
-        {
-          title: "Available Units",
-          value: stats.availableUnits,
-          icon: Droplets,
-          color: "text-info",
-          bgColor: "from-info/20 to-info/5",
-          borderColor: "border-info/20",
-        },
-        {
-          title: "Expiring Soon",
-          value: stats.expiringUnits,
-          icon: AlertCircle,
-          color: "text-destructive",
-          bgColor: "from-destructive/20 to-destructive/5",
-          borderColor: "border-destructive/20",
-        },
-      ];
-    }
-
-    return baseStats;
-  };
-
-  const statCards = getStatCards();
+  const statCards = [
+    {
+      title: "Total Hotspots",
+      value: stats.totalHotspots,
+      icon: MapPin,
+      color: "text-primary",
+      bgColor: "from-primary/20 to-primary/5",
+      borderColor: "border-primary/20",
+    },
+    {
+      title: "Active Alerts",
+      value: stats.activeAlerts,
+      icon: Droplets,
+      color: "text-info",
+      bgColor: "from-info/20 to-info/5",
+      borderColor: "border-info/20",
+    },
+    {
+      title: "Critical Zones",
+      value: stats.criticalZones,
+      icon: AlertTriangle,
+      color: "text-destructive",
+      bgColor: "from-destructive/20 to-destructive/5",
+      borderColor: "border-destructive/20",
+    },
+  ];
 
   return (
     <div className="space-y-8">
@@ -99,21 +72,21 @@ const Home = () => {
         
         <div className="relative z-10 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 mb-6">
-            <Heart className="w-4 h-4" fill="currentColor" />
-            <span className="text-sm font-medium">Welcome back, {user?.email?.split('@')[0]}</span>
+            <Cloud className="w-4 h-4" />
+            <span className="text-sm font-medium">Welcome to AquaWatch Delhi</span>
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-            LifeFlow Blood Bank
+            AquaWatch Delhi
           </h1>
           <p className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl">
-            Managing life-saving resources with modern technology. Every donation counts, every life matters.
+            Real-time water-logging monitoring and prediction system for Delhi. Mapping hotspots, preventing disruptions, saving lives.
           </p>
           
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30">
               <Activity className="w-4 h-4" />
-              <span className="text-sm font-medium">{user?.role === 'ADMIN' ? 'Administrator' : 'User'}</span>
+              <span className="text-sm font-medium">Public Access</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-success/20 backdrop-blur-sm border border-success/30">
               <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
@@ -157,48 +130,44 @@ const Home = () => {
         <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-primary/20">
           <CardHeader>
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-              <Users className="w-6 h-6 text-primary" />
+              <MapPin className="w-6 h-6 text-primary" />
             </div>
-            <CardTitle className="text-xl">Donor Management</CardTitle>
+            <CardTitle className="text-xl">Hotspot Mapping</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground leading-relaxed">
-              Register and manage blood donors efficiently. Track donation history and maintain comprehensive donor records.
+              Interactive GIS-enabled maps showing real-time and predicted water-logging hotspots across Delhi's wards and zones.
             </p>
           </CardContent>
         </Card>
 
-        {user?.role === 'ADMIN' && (
-          <>
-            <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-info/20">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-info/20 to-info/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Droplets className="w-6 h-6 text-info" />
-                </div>
-                <CardTitle className="text-xl">Blood Inventory</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground leading-relaxed">
-                  Monitor blood stock levels across all groups. Track quantities, expiry dates, and ensure optimal inventory management.
-                </p>
-              </CardContent>
-            </Card>
+        <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-info/20">
+          <CardHeader>
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-info/20 to-info/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <Droplets className="w-6 h-6 text-info" />
+            </div>
+            <CardTitle className="text-xl">Predictive Analytics</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground leading-relaxed">
+              AI-powered predictions based on rainfall data, drainage capacity, and historical patterns to prevent flooding.
+            </p>
+          </CardContent>
+        </Card>
 
-            <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-destructive/20">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-destructive/20 to-destructive/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <AlertCircle className="w-6 h-6 text-destructive" />
-                </div>
-                <CardTitle className="text-xl">Admin Control</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground leading-relaxed">
-                  Full system control with real-time alerts. Manage requests, monitor stock levels, and prevent wastage.
-                </p>
-              </CardContent>
-            </Card>
-          </>
-        )}
+        <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-destructive/20">
+          <CardHeader>
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-destructive/20 to-destructive/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <AlertTriangle className="w-6 h-6 text-destructive" />
+            </div>
+            <CardTitle className="text-xl">Alert System</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground leading-relaxed">
+              Real-time alerts for critical zones with coordination between citizens and civic agencies for rapid response.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

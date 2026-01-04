@@ -1,94 +1,32 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { 
-  Droplet, 
-  LogOut, 
+  Droplets, 
   Home, 
-  Users, 
-  Activity, 
-  Shield, 
+  Map, 
   Menu, 
   X,
-  Bell,
   Search,
   ChevronRight,
-  AlertTriangle,
-  Calendar,
-  Heart
+  FileText,
+  BarChart3,
+  Shield
 } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { apiService } from "@/lib/api";
-
-interface BloodItem {
-  id: number;
-  bloodGroup: string;
-  quantity: number;
-  expiryDate: string;
-}
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { logout, user } = useAuth();
-  const { toast } = useToast();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [notificationOpen, setNotificationOpen] = useState(false);
-  const [expiringStock, setExpiringStock] = useState<BloodItem[]>([]);
 
-  useEffect(() => {
-    if (user?.role === 'ADMIN') {
-      loadExpiringStock();
-    }
-  }, [user]);
-
-  const loadExpiringStock = async () => {
-    try {
-      const stockData = await apiService.getAllStock();
-      const expiring = stockData.filter((item: BloodItem) => {
-        const days = getDaysUntilExpiry(item.expiryDate);
-        return days <= 7 && days >= 0;
-      });
-      setExpiringStock(expiring);
-    } catch (error) {
-      console.error("Failed to load expiring stock:", error);
-      setExpiringStock([]);
-    }
-  };
-
-  const getDaysUntilExpiry = (expiryDate: string) => {
-    const today = new Date();
-    const expiry = new Date(expiryDate);
-    const diffTime = expiry.getTime() - today.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  };
-
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
-    });
-    navigate('/auth');
-  };
-  
   const getNavItems = () => {
-    if (user?.role === 'ADMIN') {
-      return [
-        { path: "/", label: "Dashboard", icon: Home, color: "text-primary" },
-        { path: "/donor", label: "Donors", icon: Users, color: "text-info" },
-        { path: "/blood-stock", label: "Blood Stock", icon: Droplet, color: "text-success" },
-        { path: "/admin", label: "Admin Panel", icon: Shield, color: "text-warning" },
-      ];
-    }
-
     return [
       { path: "/", label: "Dashboard", icon: Home, color: "text-primary" },
-      { path: "/donor", label: "Donors", icon: Users, color: "text-info" },
-      { path: "/request-blood", label: "Request Blood", icon: Heart, color: "text-destructive" },
+      { path: "/map", label: "Hotspot Map", icon: Map, color: "text-info" },
+      { path: "/reports", label: "Reports", icon: FileText, color: "text-success" },
+      { path: "/analytics", label: "Analytics", icon: BarChart3, color: "text-warning" },
+      { path: "/admin", label: "Admin Panel", icon: Shield, color: "text-destructive" },
     ];
   };
 
@@ -111,8 +49,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </div>
             {!sidebarCollapsed && (
               <div className="animate-fade-in">
-                <h1 className="text-xl font-bold text-gradient">LifeFlow</h1>
-                <p className="text-xs text-muted-foreground">Blood Bank System</p>
+                <h1 className="text-xl font-bold text-gradient">AquaWatch</h1>
+                <p className="text-xs text-muted-foreground">Delhi Water-Logging</p>
               </div>
             )}
           </Link>
@@ -159,42 +97,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           })}
         </nav>
 
-        {/* User Section */}
-        <div className="p-4 border-t border-white/10">
-          <div className={`flex items-center gap-3 p-3 rounded-2xl bg-white/30 backdrop-blur-sm border border-white/20 hover:bg-white/40 transition-all cursor-pointer ${
-            sidebarCollapsed ? 'justify-center' : ''
-          }`}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-info/20 flex items-center justify-center border border-primary/20">
-              {user?.role === 'ADMIN' ? (
-                <Shield className="w-5 h-5 text-primary" />
-              ) : (
-                <Activity className="w-5 h-5 text-primary" />
-              )}
-            </div>
-            {!sidebarCollapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground truncate">
-                  {user?.email?.split('@')[0]}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {user?.role === 'ADMIN' ? 'Administrator' : 'User'}
-                </p>
-              </div>
-            )}
-          </div>
-          
-          <Button
-            onClick={handleLogout}
-            variant="ghost"
-            className={`w-full mt-2 gap-2 hover:bg-destructive/10 hover:text-destructive ${
-              sidebarCollapsed ? 'px-2' : ''
-            }`}
-          >
-            <LogOut className="w-4 h-4" />
-            {!sidebarCollapsed && <span>Logout</span>}
-          </Button>
-        </div>
-
         {/* Collapse Toggle */}
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -209,9 +111,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex items-center justify-between h-16 px-4">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-info flex items-center justify-center shadow-lg">
-              <Droplet className="w-5 h-5 text-white" fill="currentColor" />
+              <Droplets className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-gradient">LifeFlow</span>
+            <span className="font-bold text-gradient">AquaWatch</span>
           </Link>
           
           <Button
@@ -233,22 +135,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           />
           <div className="lg:hidden fixed top-16 right-0 bottom-0 w-80 bg-card border-l border-border/50 z-50 overflow-y-auto animate-slide-in-right">
             <div className="p-6 space-y-6">
-              <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-info/10 border border-primary/20">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/30 to-info/30 flex items-center justify-center">
-                  {user?.role === 'ADMIN' ? (
-                    <Shield className="w-6 h-6 text-primary" />
-                  ) : (
-                    <Activity className="w-6 h-6 text-primary" />
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold">{user?.email}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {user?.role === 'ADMIN' ? 'Administrator' : 'User'}
-                  </p>
-                </div>
-              </div>
-
               <nav className="space-y-2">
                 {navItems.map((item) => {
                   const Icon = item.icon;
@@ -271,15 +157,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   );
                 })}
               </nav>
-
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                className="w-full gap-2 hover:bg-destructive/10 hover:text-destructive"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </Button>
             </div>
           </div>
         </>
@@ -308,143 +185,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             
             <div className="flex items-center gap-2 relative z-10">
               {/* Notification Bell - Admin Only */}
-              {user?.role === 'ADMIN' && (
-                <div className="relative">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setNotificationOpen(!notificationOpen)}
-                    className="relative w-10 h-10 rounded-xl hover:bg-white/50 transition-all hover:scale-110"
-                  >
-                    <Bell className="w-5 h-5" />
-                    {expiringStock.length > 0 && (
-                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full animate-pulse">
-                        <span className="absolute inset-0 bg-destructive rounded-full animate-ping" />
-                      </span>
-                    )}
-                  </Button>
 
-                  {/* Notification Dropdown */}
-                  {notificationOpen && (
-                    <>
-                      <div 
-                        className="fixed inset-0 z-40" 
-                        onClick={() => setNotificationOpen(false)}
-                      />
-                      <div className="absolute right-0 mt-2 w-96 bg-card/95 backdrop-blur-2xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden z-50 animate-scale-in">
-                        {/* Header */}
-                        <div className="p-4 border-b border-border/50 bg-gradient-to-r from-destructive/10 to-transparent">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-lg bg-destructive/20 flex items-center justify-center">
-                                <AlertTriangle className="w-4 h-4 text-destructive" />
-                              </div>
-                              <div>
-                                <h3 className="font-semibold text-sm">Expiry Alerts</h3>
-                                <p className="text-xs text-muted-foreground">
-                                  {expiringStock.length} items expiring soon
-                                </p>
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => setNotificationOpen(false)}
-                              className="w-6 h-6 rounded-lg hover:bg-muted/50 flex items-center justify-center transition-colors"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Notifications List */}
-                        <div className="max-h-96 overflow-y-auto">
-                          {expiringStock.length === 0 ? (
-                            <div className="p-8 text-center">
-                              <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-3">
-                                <Bell className="w-6 h-6 text-success" />
-                              </div>
-                              <p className="text-sm font-medium text-foreground">All Clear!</p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                No blood samples expiring soon
-                              </p>
-                            </div>
-                          ) : (
-                            <div className="p-2 space-y-2">
-                              {expiringStock.map((item, index) => {
-                                const days = getDaysUntilExpiry(item.expiryDate);
-                                return (
-                                  <Link
-                                    key={item.id}
-                                    to="/blood-stock"
-                                    onClick={() => setNotificationOpen(false)}
-                                    className="block p-3 rounded-xl hover:bg-muted/50 transition-all duration-200 group"
-                                    style={{
-                                      animation: 'fade-in 0.3s ease-out forwards',
-                                      animationDelay: `${index * 50}ms`,
-                                      opacity: 0
-                                    }}
-                                  >
-                                    <div className="flex items-start gap-3">
-                                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-destructive/20 to-destructive/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                                        <Droplet className="w-5 h-5 text-destructive" fill="currentColor" />
-                                      </div>
-                                      <div className="flex-1 min-w-0">
-                                        <div className="flex items-center justify-between mb-1">
-                                          <p className="font-semibold text-sm text-foreground">
-                                            Blood Group {item.bloodGroup}
-                                          </p>
-                                          <span className="px-2 py-0.5 rounded-lg bg-destructive/10 text-destructive text-xs font-medium">
-                                            {days}d left
-                                          </span>
-                                        </div>
-                                        <p className="text-xs text-muted-foreground mb-1">
-                                          {item.quantity} units available
-                                        </p>
-                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                          <Calendar className="w-3 h-3" />
-                                          <span>Expires: {item.expiryDate}</span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </Link>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Footer */}
-                        {expiringStock.length > 0 && (
-                          <div className="p-3 border-t border-border/50 bg-muted/20">
-                            <Link
-                              to="/blood-stock"
-                              onClick={() => setNotificationOpen(false)}
-                              className="block text-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                            >
-                              View All Stock →
-                            </Link>
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
               
               {/* User Avatar */}
+              {/* User Avatar - Replaced with minimal guest view */}
               <div className="ml-2 flex items-center gap-2 px-3 py-2 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 hover:bg-white/70 transition-all cursor-pointer group">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  {user?.role === 'ADMIN' ? (
-                    <Shield className="w-4 h-4 text-white" />
-                  ) : (
-                    <Activity className="w-4 h-4 text-white" />
-                  )}
+                  <Shield className="w-4 h-4 text-white" />
                 </div>
                 <div className="hidden xl:block">
                   <p className="text-xs font-semibold text-foreground leading-none">
-                    {user?.email?.split('@')[0]}
+                    Guest User
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {user?.role === 'ADMIN' ? 'Admin' : 'User'}
+                    Public Access
                   </p>
                 </div>
               </div>
