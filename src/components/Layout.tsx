@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { 
-  Droplets, 
-  Home, 
-  Map, 
-  Menu, 
+import {
+  Droplets,
+  Droplet,
+  Home,
+  Map,
+  Menu,
   X,
   Search,
   ChevronRight,
@@ -35,9 +36,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen bg-gradient-mesh">
       {/* Modern Floating Sidebar - Desktop */}
-      <aside className={`fixed left-4 top-4 bottom-4 z-40 hidden lg:flex flex-col bg-card/40 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl shadow-primary/5 transition-all duration-300 ${
-        sidebarCollapsed ? 'w-20' : 'w-72'
-      }`}>
+      <aside className={`fixed left-4 top-4 bottom-4 z-40 hidden lg:flex flex-col bg-card/40 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl shadow-primary/5 transition-all duration-300 ${sidebarCollapsed ? 'w-20' : 'w-72'
+        }`}>
         {/* Logo Section */}
         <div className="p-6 border-b border-white/10">
           <Link to="/" className="flex items-center gap-3 group">
@@ -65,11 +65,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${
-                  isActive
+                className={`group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${isActive
                     ? "bg-gradient-to-r from-primary to-info text-white shadow-lg shadow-primary/30"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                }`}
+                  }`}
                 style={{
                   animation: 'slide-in-left 0.3s ease-out forwards',
                   animationDelay: `${index * 50}ms`,
@@ -80,9 +79,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full" />
                 )}
                 <div className={`${sidebarCollapsed ? 'w-full flex justify-center' : ''}`}>
-                  <div className={`p-2 rounded-xl transition-all duration-300 ${
-                    isActive ? "bg-white/20" : "bg-muted/50 group-hover:bg-muted"
-                  }`}>
+                  <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? "bg-white/20" : "bg-muted/50 group-hover:bg-muted"
+                    }`}>
                     <Icon className={`w-5 h-5 ${isActive ? "text-white" : item.color}`} />
                   </div>
                 </div>
@@ -115,7 +113,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </div>
             <span className="font-bold text-gradient">AquaWatch</span>
           </Link>
-          
+
           <Button
             variant="ghost"
             size="sm"
@@ -129,7 +127,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <>
-          <div 
+          <div
             className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 animate-fade-in"
             onClick={() => setMobileMenuOpen(false)}
           />
@@ -144,11 +142,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                       key={item.path}
                       to={item.path}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${
-                        isActive
+                      className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${isActive
                           ? "bg-gradient-to-r from-primary to-info text-white shadow-lg"
                           : "text-muted-foreground hover:bg-muted/50"
-                      }`}
+                        }`}
                     >
                       <Icon className="w-5 h-5" />
                       <span className="font-medium">{item.label}</span>
@@ -169,7 +166,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex items-center justify-between h-16 px-6 rounded-3xl bg-card/40 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-primary/5">
             {/* Gradient Border Effect */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary/20 via-info/20 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            
+
             <div className="flex items-center gap-4 flex-1 max-w-2xl relative z-10">
               <div className="relative flex-1 group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -182,11 +179,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 relative z-10">
               {/* Notification Bell - Admin Only */}
 
-              
+
               {/* User Avatar */}
               {/* User Avatar - Replaced with minimal guest view */}
               <div className="ml-2 flex items-center gap-2 px-3 py-2 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 hover:bg-white/70 transition-all cursor-pointer group">
