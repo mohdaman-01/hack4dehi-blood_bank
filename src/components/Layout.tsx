@@ -66,8 +66,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 key={item.path}
                 to={item.path}
                 className={`group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${isActive
-                    ? "bg-gradient-to-r from-primary to-info text-white shadow-lg shadow-primary/30"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  ? "bg-gradient-to-r from-primary to-info text-white shadow-lg shadow-primary/30"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
                 style={{
                   animation: 'slide-in-left 0.3s ease-out forwards',
@@ -143,8 +143,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                       to={item.path}
                       onClick={() => setMobileMenuOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${isActive
-                          ? "bg-gradient-to-r from-primary to-info text-white shadow-lg"
-                          : "text-muted-foreground hover:bg-muted/50"
+                        ? "bg-gradient-to-r from-primary to-info text-white shadow-lg"
+                        : "text-muted-foreground hover:bg-muted/50"
                         }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -222,7 +222,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   <Droplet className="w-4 h-4 text-primary" fill="currentColor" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">LifeFlow</p>
+                  <p className="text-sm font-semibold text-foreground">AquaWatch</p>
                   <p className="text-xs text-muted-foreground">© 2025 All rights reserved</p>
                 </div>
               </div>
