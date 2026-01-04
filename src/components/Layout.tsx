@@ -1,9 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
-  Droplets, 
+  Droplet, 
   LogOut, 
   Home, 
-  Map, 
+  Users, 
   Activity, 
   Shield, 
   Menu, 
@@ -13,8 +13,7 @@ import {
   ChevronRight,
   AlertTriangle,
   Calendar,
-  FileText,
-  BarChart3
+  Heart
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -80,17 +79,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     if (user?.role === 'ADMIN') {
       return [
         { path: "/", label: "Dashboard", icon: Home, color: "text-primary" },
-        { path: "/map", label: "Hotspot Map", icon: Map, color: "text-info" },
-        { path: "/reports", label: "Reports", icon: FileText, color: "text-success" },
-        { path: "/analytics", label: "Analytics", icon: BarChart3, color: "text-warning" },
-        { path: "/admin", label: "Admin Panel", icon: Shield, color: "text-destructive" },
+        { path: "/donor", label: "Donors", icon: Users, color: "text-info" },
+        { path: "/blood-stock", label: "Blood Stock", icon: Droplet, color: "text-success" },
+        { path: "/admin", label: "Admin Panel", icon: Shield, color: "text-warning" },
       ];
     }
 
     return [
       { path: "/", label: "Dashboard", icon: Home, color: "text-primary" },
-      { path: "/map", label: "Hotspot Map", icon: Map, color: "text-info" },
-      { path: "/reports", label: "Reports", icon: FileText, color: "text-success" },
+      { path: "/donor", label: "Donors", icon: Users, color: "text-info" },
+      { path: "/request-blood", label: "Request Blood", icon: Heart, color: "text-destructive" },
     ];
   };
 
@@ -113,8 +111,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </div>
             {!sidebarCollapsed && (
               <div className="animate-fade-in">
-                <h1 className="text-xl font-bold text-gradient">AquaWatch</h1>
-                <p className="text-xs text-muted-foreground">Delhi Water-Logging</p>
+                <h1 className="text-xl font-bold text-gradient">LifeFlow</h1>
+                <p className="text-xs text-muted-foreground">Blood Bank System</p>
               </div>
             )}
           </Link>
@@ -211,9 +209,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex items-center justify-between h-16 px-4">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-info flex items-center justify-center shadow-lg">
-              <Droplets className="w-5 h-5 text-white" />
+              <Droplet className="w-5 h-5 text-white" fill="currentColor" />
             </div>
-            <span className="font-bold text-gradient">AquaWatch</span>
+            <span className="font-bold text-gradient">LifeFlow</span>
           </Link>
           
           <Button
@@ -366,7 +364,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                               </div>
                               <p className="text-sm font-medium text-foreground">All Clear!</p>
                               <p className="text-xs text-muted-foreground mt-1">
-                                No critical water-logging alerts
+                                No blood samples expiring soon
                               </p>
                             </div>
                           ) : (
@@ -387,7 +385,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                                   >
                                     <div className="flex items-start gap-3">
                                       <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-destructive/20 to-destructive/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                                        <Droplets className="w-5 h-5 text-destructive" />
+                                        <Droplet className="w-5 h-5 text-destructive" fill="currentColor" />
                                       </div>
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center justify-between mb-1">
@@ -418,11 +416,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         {expiringStock.length > 0 && (
                           <div className="p-3 border-t border-border/50 bg-muted/20">
                             <Link
-                              to="/map"
+                              to="/blood-stock"
                               onClick={() => setNotificationOpen(false)}
                               className="block text-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                             >
-                              View All Hotspots →
+                              View All Stock →
                             </Link>
                           </div>
                         )}

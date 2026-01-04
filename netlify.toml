@@ -12,12 +12,12 @@
 
 # Production environment variables
 [context.production.environment]
-  VITE_API_URL = "https://your-backend-api-url.com/api"
+  VITE_API_URL = "https://blood-bank-4a5247a51f8b.herokuapp.com/api"
 
 # Deploy preview environment variables  
 [context.deploy-preview.environment]
-  VITE_API_URL = "https://your-backend-api-url.com/api"
+  VITE_API_URL = "https://blood-bank-4a5247a51f8b.herokuapp.com/api"
 
 # Branch deploy environment variables
 [context.branch-deploy.environment]
-  VITE_API_URL = "https://your-backend-api-url.com/api"
+  VITE_API_URL = "https://blood-bank-4a5247a51f8b.herokuapp.com/api"
